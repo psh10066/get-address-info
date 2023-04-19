@@ -16,6 +16,8 @@
 </div>
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1de54ec89b22c32f3833b3c01b7bbe77&libraries=services"
+        type="text/javascript"></script>
 <script>
   var contents = {
     roadAddress: '도로명주소',
@@ -33,7 +35,14 @@
         for (const key in contents) {
           html += '<p style="margin: 0">' + contents[key] + ' : ' + data[key] + '</p>';
         }
-        element_list.innerHTML = '<div style="margin-bottom: 10px;">' + html + '</div>' + element_list.innerHTML;
+        const geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(data.roadAddress, (result, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            html += '<p style="margin: 0">위도 : ' + result[0].y + '</p>';
+            html += '<p style="margin: 0">경도 : ' + result[0].x + '</p>';
+            element_list.innerHTML = '<div style="margin-bottom: 10px;">' + html + '</div>' + element_list.innerHTML;
+          }
+        });
       },
       // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
       onresize: function (size) {
