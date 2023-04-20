@@ -19,40 +19,44 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1de54ec89b22c32f3833b3c01b7bbe77&libraries=services"
         type="text/javascript"></script>
 <script>
-  var contents = {
+  const contents = {
     roadAddress: '도로명주소',
     jibunAddress: '지번주소',
     zonecode: '우편번호'
   };
 
-  var element_wrap = document.getElementById('wrap');
-  var element_list = document.getElementById('list');
+  const element_wrap = document.getElementById('wrap');
+  const element_list = document.getElementById('list');
 
-  function daumPostcode() {
+  const daumPostcode = () => {
     new daum.Postcode({
-      oncomplete: function (data) {
-        var html = '';
-        for (const key in contents) {
-          html += '<p style="margin: 0">' + contents[key] + ' : ' + data[key] + '</p>';
-        }
+      oncomplete: data => {
         const geocoder = new kakao.maps.services.Geocoder();
         geocoder.addressSearch(data.roadAddress, (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
-            html += '<p style="margin: 0">위도 : ' + result[0].y + '</p>';
-            html += '<p style="margin: 0">경도 : ' + result[0].x + '</p>';
-            element_list.innerHTML = '<div style="padding-top:10px">' + html + '</div>' + element_list.innerHTML;
+            let html = '';
+            for (const key in contents) {
+              html += getListHtml(contents[key], data[key]);
+            }
+            html += getListHtml('위도', result[0].y);
+            html += getListHtml('경도', result[0].x);
+            element_list.innerHTML = `<div style="padding-top:10px">${html}</div>${element_list.innerHTML}`;
             element_list.style.display = 'block';
             element_list.scrollIntoView();
           }
         });
       },
       // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
-      onresize: function (size) {
+      onresize: size => {
         element_wrap.style.height = size.height + 'px';
       },
       width: '100%',
       height: '100%'
     }).embed(element_wrap, {autoClose: false});
+  }
+
+  const getListHtml = (key, value) => {
+    return `<p style="margin: 0">${key} : ${value}</p>`;
   }
 
   daumPostcode();
