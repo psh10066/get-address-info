@@ -8,11 +8,11 @@
     <meta content="주소 정보 조회" name="title"/>
     <title>주소 정보 조회</title>
 </head>
-<body>
 
+<body style="margin: 0">
 <div id="app" style="display: flex">
-    <div id="wrap" style="border:1px solid;width:500px;height:466px;margin:5px 0;position:relative"></div>
-    <div id="list" style="margin-left: 30px"></div>
+    <div id="wrap" style="border:1px solid;width:500px;height:466px;margin:10px;position:relative"></div>
+    <div id="list" style="display:none;min-width:200px;"></div>
 </div>
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -40,7 +40,9 @@
           if (status === kakao.maps.services.Status.OK) {
             html += '<p style="margin: 0">위도 : ' + result[0].y + '</p>';
             html += '<p style="margin: 0">경도 : ' + result[0].x + '</p>';
-            element_list.innerHTML = '<div style="margin-bottom: 10px;">' + html + '</div>' + element_list.innerHTML;
+            element_list.innerHTML = '<div style="padding-top:10px">' + html + '</div>' + element_list.innerHTML;
+            element_list.style.display = 'block';
+            element_list.scrollIntoView();
           }
         });
       },
