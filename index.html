@@ -56,7 +56,7 @@
   }
 
   const getListHtml = (key, value) => {
-    return `<p style="margin: 0">${key} : ${value}</p>`;
+    return value ? `<p style="margin: 0">${key} : ${value}</p>` : '';
   }
 
   daumPostcode();
