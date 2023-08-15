@@ -33,17 +33,27 @@
       oncomplete: data => {
         const geocoder = new kakao.maps.services.Geocoder();
         geocoder.addressSearch(data.roadAddress, (result, status) => {
-          if (status === kakao.maps.services.Status.OK) {
-            let html = '';
-            for (const key in contents) {
-              html += getListHtml(contents[key], data[key]);
-            }
-            html += getListHtml('위도', result[0].y);
-            html += getListHtml('경도', result[0].x);
-            element_list.innerHTML = `<div style="padding-top:10px">${html}</div>${element_list.innerHTML}`;
-            element_list.style.display = 'block';
-            element_list.scrollIntoView();
+          let html = '';
+          for (const key in contents) {
+            html += getListHtml(contents[key], data[key]);
           }
+          switch (status) {
+            case kakao.maps.services.Status.OK:
+              html += getListHtml('위도', result[0].y);
+              html += getListHtml('경도', result[0].x);
+              break;
+            case kakao.maps.services.Status.ZERO_RESULT:
+              html += getListHtml('위도', '위도 값이 존재하지 않습니다.');
+              html += getListHtml('경도', '경도 값이 존재하지 않습니다.');
+              break;
+            default:
+              html += getListHtml('위도', '좌표 불러오는 서버에 문제가 발생했습니다.');
+              html += getListHtml('경도', '좌표 불러오는 서버에 문제가 발생했습니다.');
+              break;
+          }
+          element_list.innerHTML = `<div style="padding-top:10px">${html}</div>${element_list.innerHTML}`;
+          element_list.style.display = 'block';
+          element_list.scrollIntoView();
         });
       },
       // 우편번호 찾기 화면 크기가 조정되었을때 실행할 코드를 작성하는 부분. iframe을 넣은 element의 높이값을 조정한다.
