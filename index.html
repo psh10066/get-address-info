@@ -30,6 +30,7 @@
 
   const daumPostcode = () => {
     new daum.Postcode({
+      autoMappingRoad: false,
       oncomplete: data => {
         const geocoder = new kakao.maps.services.Geocoder();
         geocoder.addressSearch(data.roadAddress, (result, status) => {
